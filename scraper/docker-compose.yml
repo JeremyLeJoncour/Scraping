@@ -1,0 +1,28 @@
+version: '2'
+services:
+
+  mysql:
+    container_name: mysql_return
+    image: mysql:5.7
+    ports:
+      - "3307:3307"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: scraping
+    volumes: 
+      - ./data/enjin.sql:/docker-entrypoint-initdb.d/init.sql
+
+  grafana:
+    container_name: grafana_scrap
+    image: grafana/grafana
+    ports:
+      - '80:3000'
+    environment:
+      GRAFANA_ADMIN_USER: admin
+      GRAFANA_ADMIN_PASSWORD: admin
+      GF_AUTH_ORG_ROLE: viewer
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      #GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/commetuveux.json
+    volumes: 
+      - ./dashboards/:/etc/grafana/provisioning/dashboards/
+      - ./datasources/:/etc/grafana/provisioning/datasources/
